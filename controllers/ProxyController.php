@@ -40,22 +40,13 @@ class ProxyController extends Controller
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
                     [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
-                    ->groupBy(['id'])->orderBy('id')->all();
-            var_dump ($result);
-            die();
-//            $result = $DB_L->query("SELECT * FROM proxy_buy WHERE active=1 ORDER BY id" . $limit);
-            $result = $DB_L->query("SELECT p.*
-                        FROM `proxy_buy` AS p
-                        LEFT JOIN proxy_log AS pl ON pl.ip = p.host
-                        WHERE p.active =1 AND (pl.dt_unblock < '".date('Y-m-d H:i:s', time())."' AND pl.search_engine = '{$search_engine}')
-                        OR pl.search_engine != '{$search_engine}'
-                        OR pl.search_engine IS NULL 
-                        GROUP BY p.id 
-                        ORDER BY p.id" . $limit);
-                                
-            while ($res = $result->fetch_array(MYSQLI_ASSOC)) {
+                    ->groupBy(['id'])->orderBy('id')->limit(($limit - 1) * 53)->offset(53)->all();
+            
+            foreach ($result as $res) {
                 $proxy[] = $res;
             }
+            var_dump ($proxy);
+            die();
             return $proxy;
         }
     }
