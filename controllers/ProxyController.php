@@ -40,7 +40,7 @@ class ProxyController extends Controller
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
                     [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
-                    ->groupBy(['id'])->all();
+                    ->groupBy(['id'])->orderBy('id')->all();
             var_dump ($result);
             die();
 //            $result = $DB_L->query("SELECT * FROM proxy_buy WHERE active=1 ORDER BY id" . $limit);
