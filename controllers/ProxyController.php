@@ -37,8 +37,8 @@ class ProxyController extends Controller
             $limit = " LIMIT " . (($limit - 1) * 53) . ',53';
             
             $result = ProxyBuy::find()->joinWith('proxyLog')->where(
-                    'active = :active AND proxy_log.dt_unblock < :dt_unblock', 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time())])->all();
+                    "active = :active AND proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine", 
+                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])->all();
             var_dump ($result);
             die();
 //            $result = $DB_L->query("SELECT * FROM proxy_buy WHERE active=1 ORDER BY id" . $limit);
