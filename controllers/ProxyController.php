@@ -435,7 +435,7 @@ class ProxyController extends Controller
         return $return;
     }
     
-    public static function proxy_results($word, $start, $yahoo =0)
+    public static function proxyResults($word, $start, $yahoo =0)
     {
         global $proxy, $proxy_index, $proxy_table;
         
