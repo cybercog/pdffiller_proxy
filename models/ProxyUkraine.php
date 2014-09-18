@@ -48,6 +48,11 @@ class ProxyUkraine extends \yii\db\ActiveRecord
             [['login', 'password'], 'string', 'max' => 50]
         ];
     }
+    
+    public function getProxyLog()
+    {
+        return $this->hasOne(ProxyLog::className(), array('ip' => 'host'));
+    }
 
     /**
      * @inheritdoc

@@ -44,8 +44,6 @@ class ProxyController extends Controller
             foreach ($result as $res) {
                 $proxy[] = $res;
             }
-            var_dump ($proxy);
-            die();
             return $proxy;
         }
     }
