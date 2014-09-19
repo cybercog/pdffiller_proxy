@@ -947,11 +947,6 @@ class ProxyController extends Controller
             $model->dt = date('Y-m-d H:i:s', time());
             $model->dt_unblock = date('Y-m-d H:i:s', (time() + $timeout));
             $model->save();
-            $DB_L->query("INSERT INTO proxy_log (ip, search_engine, code, dt, dt_unblock) 
-                        VALUES('{$proxy_ip}', '{$search_engine}',{$curl_info['http_code']}, '".date('Y-m-d H:i:s', time())."', '".date('Y-m-d H:i:s', (time() + $timeout))."')
-                        ");
-                        
-//            $DB_L->query("DELETE FROM proxy_log WHERE ip=''"); 
                         
             foreach ($proxy as $key => $val) {
                 if($val['host'] == $proxy_ip) {
