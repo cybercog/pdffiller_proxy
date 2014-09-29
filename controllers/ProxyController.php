@@ -180,6 +180,12 @@ class ProxyController extends Controller
         
         curl_close($curl_session);
 
+        return static::getGooglePageResults($res);
+    }
+    
+    public static function getGooglePageResults($googlePage){
+        $res = $googlePage;
+        
         if (!$res || $res == '' || strlen($res) < 10) {
             echo '-1';
             return -1;
@@ -190,6 +196,7 @@ class ProxyController extends Controller
         if (!isset($main[1][0])) $main[1][0] = 0;
         $return = array();
         $return['pages'] = str_replace('About ', '', str_replace(',', '', $main[1][0]));
+        //echo $main[1][0];exit;
 
         preg_match_all('/<div.*id="resultStats"(.*)<\/div>/Us', $res, $stats);
 
@@ -198,6 +205,10 @@ class ProxyController extends Controller
             $stats = explode('nobr', $stats[0]);
             $stats = explode(';', $stats[0]);
             $google_res_count = preg_replace('~[^0-9]+~','',$stats[0]);
+            /*
+            $google_res_count = (int)$stats[1][0];
+            $google_res_count = preg_replace("/\D/","", $stats[1][0]);
+             */
         }
         else
             $google_res_count = 0;
@@ -208,12 +219,19 @@ class ProxyController extends Controller
         $pos = strpos($res, 'id="foot"');
         if ($pos > 0)
             $res = substr($res, 0, $pos);
-
+        //echo $res;exit;
         preg_match_all('/<li class="g">.*<h3 class="r"><a href="\/url\?q=(.*)&amp;sa=U.*">(.*)<\/a><\/h3>.*<span class="st">(.*)<\/span>.*<\/li>/Us', $res, $main);
+        //'<li class="g"><h3 class="r"><a href="\/url?q=(.*)&amp;sa=U.*">(.*)<\/a><\/h3>.*<span class="st">(.*)<\/span>.*<\/li>';
+        //<li class="g"><span style="float:left"><span class="mime">[PDF]</span>&nbsp;</span><h3 class="r"><a href="/url?q=http://www.crestwoodmedcenter.com/Documents/The_Heart_Of_The_Matter.pdf&amp;sa=U&amp;ei=SsFKUbLhAciOtQb6tICwBA&amp;ved=0CBgQFjAA&amp;usg=AFQjCNEOBEX6AX-cVdei-nJo8fl-rkmCdw">The_Heart_Of_The_Matter - Crestwood Medical Center</a></h3><div class="s"><div class="kv" style="margin-bottom:2px"><cite>www.crestwoodmedcenter.com/Documents/The_Heart_Of_The_Matter.pdf</cite><span class="flc"> - <a href="/url?q=http://webcache.googleusercontent.com/search%3Fq%3Dcache:zS1YjSgDAuwJ:http://www.crestwoodmedcenter.com/Documents/The_Heart_Of_The_Matter.pdf%252Bfiletype:pdf%2Bsite:www.crestwoodmedcenter.com%26hl%3Den%26ct%3Dclnk&amp;sa=U&amp;ei=SsFKUbLhAciOtQb6tICwBA&amp;ved=0CBkQIDAA&amp;usg=AFQjCNHTJ1LMFBueE6pyIc2v8pDOlYvjng">Cached</a></span></div><span class="st">PREMIER PATIENT EXPERIENCE. Heart of the Matter. Hospital proves cardiac <br>  procedure is safe and is now fighting to keep the service available <b>...</b></span><br></div></li>
+        //print_r($main);exit;
+        preg_match_all('/<p class="_Bmc" style="margin:3px 8px"><a href="(.*)">(.*)<\/a><\/p>/Us', $res, $offen_seek);
+        
         $return['links'] = $main[1];
         $return['titles'] = $main[2];
         $return['descriptions'] = $main[3];
         $return['google_res_count'] = $google_res_count;
+        $return['offen_seek_links'] = $offen_seek[1];
+        $return['offen_seek_text'] = preg_replace('~(<b>|</b>)~','',$offen_seek[2]);
 
         if (count($return['links']) == 0 && strpos($res_or, '302 Moved') !== false && strpos($res_or, 'The document has moved') !== false)
             return -2;
@@ -505,13 +523,12 @@ class ProxyController extends Controller
      * @param string $agent
      * @return string 
      */
-    public function GetHTML(
+    public function getHTML(
             $url, 
-            $proxy = array(), 
-            $agent = "Mozilla/5.0 (Windows; I; Windows NT 5.1; ru; rv:1.9.2.13) Gecko/20100101 Firefox/4.0"
+            $proxy = array()
             ){
         $curl_session = curl_init();
-        curl_setopt($curl_session, CURLOPT_USERAGENT, $agent);
+        curl_setopt($curl_session, CURLOPT_USERAGENT, static::getRandomUserAgent());
         curl_setopt($curl_session, CURLOPT_URL, $url);
         curl_setopt($curl_session, CURLOPT_VERBOSE, 1);
         curl_setopt($curl_session, CURLOPT_SSL_VERIFYPEER, FALSE);
