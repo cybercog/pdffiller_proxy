@@ -39,7 +39,7 @@ class ProxyController extends Controller
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
                     [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
-                    ->groupBy(['id'])->orderBy('id')->limit(($limit - 1) * 53)->offset(53)->all();
+                    ->groupBy(['id'])->orderBy('id')->limit(53)->offset(($limit - 1) * 53)->all();
             
             foreach ($result as $res) {
                 $proxy[] = $res;
@@ -58,7 +58,7 @@ class ProxyController extends Controller
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
                     [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
-                    ->groupBy(['id'])->orderBy('id')->limit(($limit - 1) * 45)->offset(45)->all();
+                    ->groupBy(['id'])->orderBy('id')->limit(45)->offset(($limit - 1) * 45)->all();
             
             foreach ($result as $res) {
                 $proxy[] = $res;
@@ -77,9 +77,9 @@ class ProxyController extends Controller
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
                     [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
-                    ->groupBy(['id'])->orderBy('id')->limit(($limit - 1) * 50)->offset(50)->all();
+                    ->groupBy(['id'])->orderBy('id')->limit(50)->offset(($limit - 1) * 50)->all();
             
-            foreach ($result as $res) {
+;            foreach ($result as $res) {
                 $proxy[] = $res;
             }
             return $proxy;
@@ -115,7 +115,7 @@ class ProxyController extends Controller
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
                     [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
-                    ->groupBy(['id'])->orderBy('id')->limit(($limit - 1) * 52)->offset(52)->all();
+                    ->groupBy(['id'])->orderBy('id')->limit(52)->offset(($limit - 1) * 52)->all();
             
             foreach ($result as $res) {
                 $proxy[] = $res;
