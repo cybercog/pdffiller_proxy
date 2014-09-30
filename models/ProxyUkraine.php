@@ -32,7 +32,7 @@ class ProxyUkraine extends \yii\db\ActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('dbPdfDb');
+        return Yii::$app->get('dbForms');
     }
 
     /**
