@@ -523,7 +523,7 @@ class ProxyController extends Controller
      * @param string $agent
      * @return string 
      */
-    public function getHTML(
+    public static function getHTML(
             $url, 
             $proxy = array()
             ){
