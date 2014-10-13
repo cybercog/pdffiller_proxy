@@ -152,14 +152,14 @@ class ProxyController extends Controller
         return $output;
     }
     
-    public static function getGoogleResults($word, $host, $port, $login, $password, $start)
+    public static function getGoogleResults($word, $host, $port, $login, $password, $start, $lang = '')
     {
         global $agents;
         $key = rand(0, count($agents));
         $pdf = 0;
         $useragent = self::getRandomUserAgent();
         ini_set('user_agent', $useragent);
-        $url = "http://www.google.com/search?q=" . urlencode($word) . '&start=' . $start;
+        $url = "http://www.google.com/search?q=" . urlencode($word) . '&start=' . $start . $lang;
         $curl_session = curl_init();
         curl_setopt($curl_session, CURLOPT_URL, $url);
         curl_setopt($curl_session, CURLOPT_VERBOSE, 1);
