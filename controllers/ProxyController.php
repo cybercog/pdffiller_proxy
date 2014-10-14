@@ -461,8 +461,9 @@ class ProxyController extends Controller
         $p = 0;
         $step = 0;
         while ($search) {
-            if(!isset($proxy[$proxy_index]))
+            while($proxy_index < count($proxy) && !isset($proxy[$proxy_index])) {
                 $proxy_index++;
+            }
             
             if ($proxy[$proxy_index]['active'] == 0) {
                 $proxy_index++;
