@@ -186,6 +186,12 @@ class ProxyController extends Controller
     public static function getGooglePageResults($googlePage){
         $res = $googlePage;
         
+        $relevant = true;
+        $relevantPhrase = 'In order to show you the most relevant results, we have omitted some entries';
+        if(strpos($res, $relevantPhrase) !== false){
+            $relevant = false;
+        }
+        
         if (!$res || $res == '' || strlen($res) < 10) {
             echo '-1';
             return -1;
@@ -232,6 +238,7 @@ class ProxyController extends Controller
         $return['google_res_count'] = $google_res_count;
         $return['offen_seek_links'] = $offen_seek[1];
         $return['offen_seek_text'] = preg_replace('~(<b>|</b>)~','',$offen_seek[2]);
+        $return['relevant'] = $relevant;
 
         if (count($return['links']) == 0 && strpos($res_or, '302 Moved') !== false && strpos($res_or, 'The document has moved') !== false)
             return -2;
