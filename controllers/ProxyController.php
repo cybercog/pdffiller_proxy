@@ -472,6 +472,11 @@ class ProxyController extends Controller
                 $proxy_index++;
             }
             
+            if (!isset($proxy[$proxy_index])) {
+                $proxy_index = 0;
+                return false;
+            }
+            
             if ($proxy[$proxy_index]['active'] == 0) {
                 $proxy_index++;
                 if ($proxy_index >= count($proxy)) {
