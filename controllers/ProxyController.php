@@ -541,7 +541,8 @@ class ProxyController extends Controller
      */
     public static function getHTML(
             $url, 
-            $proxy = array()
+            $proxy = array(),
+            $getInfo = false
             ){
         $curl_session = curl_init();
         curl_setopt($curl_session, CURLOPT_USERAGENT, static::getRandomUserAgent());
@@ -557,6 +558,11 @@ class ProxyController extends Controller
         }
 
         $res = curl_exec($curl_session);
+        if($getInfo){
+            $info = curl_getinfo($curl_session); 
+            $infoRes = $res;
+            $res = ['page' => $infoRes, 'info' => $info];
+        }
         curl_close($curl_session);
 
         return $res;
