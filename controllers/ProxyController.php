@@ -542,7 +542,8 @@ class ProxyController extends Controller
     public static function getHTML(
             $url, 
             $proxy = array(),
-            $getInfo = false
+            $getInfo = false,
+            $autoRedirect = false
             ){
         $curl_session = curl_init();
         curl_setopt($curl_session, CURLOPT_USERAGENT, static::getRandomUserAgent());
@@ -555,6 +556,10 @@ class ProxyController extends Controller
         if ($proxy){
             curl_setopt($curl_session, CURLOPT_PROXYUSERPWD, $proxy['login'] . ':' . $proxy['password']);
             curl_setopt($curl_session, CURLOPT_PROXY, $proxy['host'] . ':' . $proxy['port']);
+        }
+        
+        if ($autoRedirect){
+            curl_setopt($curl_session, CURLOPT_FOLLOWLOCATION, true);
         }
 
         $res = curl_exec($curl_session);
