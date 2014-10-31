@@ -993,7 +993,7 @@ class ProxyController extends Controller
             $model->save();
                         
             foreach ($proxy as $key => $val) {
-                if($val['host'] == $proxy_ip) {
+                if($val['host'] == $proxy_ip && $curl_info['http_code'] != 0) {
                     unset($proxy[$key]);
                 }
             }
