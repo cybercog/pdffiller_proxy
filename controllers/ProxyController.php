@@ -175,6 +175,7 @@ class ProxyController extends Controller
         $res = curl_exec($curl_session);
         
         if(!self::checkProxyResponseCode($host, curl_getinfo($curl_session))) {
+            echo 'proxy debug: 5';
             return false;
         }
         
@@ -474,6 +475,7 @@ class ProxyController extends Controller
             
             if (!isset($proxy[$proxy_index])) {
                 $proxy_index = 0;
+                echo 'proxy debug: 1';
                 return false;
             }
             
@@ -482,7 +484,10 @@ class ProxyController extends Controller
                 if ($proxy_index >= count($proxy)) {
                     $proxy_index = 0;
                     $p++;
-                    if ($p > 1) return false;
+                    if ($p > 1) {
+                        echo 'proxy debug: 2';
+                        return false;
+                    }
                 }
             }
             if ($yahoo==3){
@@ -511,7 +516,10 @@ class ProxyController extends Controller
                 if ($proxy_index >= count($proxy)) {
                     $proxy_index = 0;
                     $p++;
-                    if ($p > 1) return false;
+                    if ($p > 1) {
+                        echo 'proxy debug: 3';
+                        return false;
+                    }
                 }
             } else {
                 $search = false;
