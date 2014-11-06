@@ -468,13 +468,18 @@ class ProxyController extends Controller
         $search = true;
         $p = 0;
         $step = 0;
+        
+        echo 'proxy debug begin (index): '.$proxy_index;
+        echo 'proxy debug begin (count): '.count($proxy);
+        echo 'proxy debug begin (isset): '.isset($proxy[$proxy_index]);
+            
         while ($search) {
             while($proxy_index < count($proxy) && !isset($proxy[$proxy_index])) {
                 $proxy_index++;
             }
             
             echo 'proxy debug (index): '.$proxy_index;
-            echo 'proxy debug (count): '.count($proxy_index);
+            echo 'proxy debug (count): '.count($proxy);
             echo 'proxy debug (isset): '.isset($proxy[$proxy_index]);
             
             if (!isset($proxy[$proxy_index])) {
