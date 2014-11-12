@@ -152,7 +152,7 @@ class ProxyController extends Controller
         return $output;
     }
     
-    public static function getGoogleResults($word, $host, $port, $login, $password, $start, $lang = '')
+    public static function getGoogleResults($word, $host, $port, $login, $password, $start = 0, $lang = '', $is_map = false)
     {
         global $agents;
         $key = rand(0, count($agents));
@@ -175,13 +175,16 @@ class ProxyController extends Controller
         $res = curl_exec($curl_session);
         
         if(!self::checkProxyResponseCode($host, curl_getinfo($curl_session))) {
-            echo 'proxy debug: 5';
             return false;
         }
         
         curl_close($curl_session);
 
-        return static::getGooglePageResults($res);
+        return $res;
+        if(!$is_map)
+            return static::getGooglePageResults($res);
+        else
+            return static::getGooglePageResultsMap($res);
     }
     
     public static function getGooglePageResults($googlePage){
@@ -242,6 +245,36 @@ class ProxyController extends Controller
         $return['relevant'] = $relevant;
 
         if (count($return['links']) == 0 && strpos($res_or, '302 Moved') !== false && strpos($res_or, 'The document has moved') !== false)
+            return -2;
+
+        return $return;
+    }
+    
+    public static function getGooglePageResultsMap($res){
+        $relevant = true;
+        $relevantPhrase = 'In order to show you the most relevant results, we have omitted some entries';
+        if(strpos($res, $relevantPhrase) !== false){
+            $relevant = false;
+        }
+        
+        if (!$res || $res == '' || strlen($res) < 10) {
+            echo '-1';
+            return -1;
+        }
+        
+        preg_match_all('/<table class="ts"(.*)>(.*)<\/table>/Us', $res, $main);
+        
+        $return = [];
+        if(isset($main[2][0]) && !empty($main[2][0])) {
+            $gmaps = $main[2][0];
+            preg_match_all('/<h4 class="r"(.*)><a(.*)href="\/url\?q=http:\/\/(.*)\/&amp;.*">(.*)<\/a><\/h4>/Us', $gmaps, $main);
+            if(isset($main[3])) {
+                $return['sites'] = $main[3];
+                $return['titles'] = $main[4];
+            }
+        }
+
+        if (count($return['sites']) == 0 && strpos($res, '302 Moved') !== false && strpos($res, 'The document has moved') !== false)
             return -2;
 
         return $return;
@@ -468,23 +501,14 @@ class ProxyController extends Controller
         $search = true;
         $p = 0;
         $step = 0;
-        
-        echo 'proxy debug begin (index): '.$proxy_index;
-        echo 'proxy debug begin (count): '.count($proxy);
-        echo 'proxy debug begin (isset): '.isset($proxy[$proxy_index]);
             
         while ($search) {
             while($proxy_index < count($proxy) && !isset($proxy[$proxy_index])) {
                 $proxy_index++;
             }
             
-            echo 'proxy debug (index): '.$proxy_index;
-            echo 'proxy debug (count): '.count($proxy);
-            echo 'proxy debug (isset): '.isset($proxy[$proxy_index]);
-            
             if (!isset($proxy[$proxy_index])) {
                 $proxy_index = 0;
-                echo 'proxy debug: 1';
                 return false;
             }
             
@@ -494,7 +518,6 @@ class ProxyController extends Controller
                     $proxy_index = 0;
                     $p++;
                     if ($p > 1) {
-                        echo 'proxy debug: 2';
                         return false;
                     }
                 }
@@ -526,7 +549,71 @@ class ProxyController extends Controller
                     $proxy_index = 0;
                     $p++;
                     if ($p > 1) {
-                        echo 'proxy debug: 3';
+                        return false;
+                    }
+                }
+            } else {
+                $search = false;
+                $proxy_index++;
+                if ($proxy_index >= count($proxy)) {
+                    $proxy_index = 0;
+                    if($yahoo == 0){
+                    	//sleep(60 - count($proxy) + 20);
+                        sleep(30);
+                    }elseif($yahoo == 3){
+                    	//sleep in function getYandexResults
+                    }else{
+                    	sleep(120);
+                    }
+                }
+                return $title;
+            }
+        }
+    }
+    
+    public static function proxyResultsGMap($query)
+    {
+        global $proxy, $proxy_index, $proxy_table;
+        
+        $search = true;
+        $p = 0;
+        $step = 0;
+            
+        while ($search) {
+            while($proxy_index < count($proxy) && !isset($proxy[$proxy_index])) {
+                $proxy_index++;
+            }
+            
+            if (!isset($proxy[$proxy_index])) {
+                $proxy_index = 0;
+                return false;
+            }
+            
+            if ($proxy[$proxy_index]['active'] == 0) {
+                $proxy_index++;
+                if ($proxy_index >= count($proxy)) {
+                    $proxy_index = 0;
+                    $p++;
+                    if ($p > 1) {
+                        return false;
+                    }
+                }
+            }
+            
+            $title = self::getGoogleResults($word, $proxy[$proxy_index]['host'], $proxy[$proxy_index]['port'], $proxy[$proxy_index]['login'], $proxy[$proxy_index]['password'], 0, '', true);
+            return $title;
+            if ($title == -1 || $title == -2) {
+                if ($title == -2) {
+                    $connection = \Yii::$app->dbPdfDb;
+                    $connection->open();
+                    $connection->createCommand("UPDATE $proxy_table SET failure=failure+1 WHERE id=" . $proxy[$proxy_index]['id'])->execute();
+                }
+                $proxy[$proxy_index]['active'] = 0;
+                $proxy_index++;
+                if ($proxy_index >= count($proxy)) {
+                    $proxy_index = 0;
+                    $p++;
+                    if ($p > 1) {
                         return false;
                     }
                 }
