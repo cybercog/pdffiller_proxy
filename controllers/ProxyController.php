@@ -154,9 +154,6 @@ class ProxyController extends Controller
     
     public static function getGoogleResults($word, $host, $port, $login, $password, $start = 0, $lang = '', $is_map = false)
     {
-        global $agents;
-        $key = rand(0, count($agents));
-        $pdf = 0;
         $useragent = self::getRandomUserAgent();
         ini_set('user_agent', $useragent);
         $url = "http://www.google.com/search?q=" . urlencode($word) . '&start=' . $start . $lang;
@@ -179,8 +176,7 @@ class ProxyController extends Controller
         }
         
         curl_close($curl_session);
-
-        return $res;
+        
         if(!$is_map)
             return static::getGooglePageResults($res);
         else
@@ -251,11 +247,6 @@ class ProxyController extends Controller
     }
     
     public static function getGooglePageResultsMap($res){
-        $relevant = true;
-        $relevantPhrase = 'In order to show you the most relevant results, we have omitted some entries';
-        if(strpos($res, $relevantPhrase) !== false){
-            $relevant = false;
-        }
         
         if (!$res || $res == '' || strlen($res) < 10) {
             echo '-1';
@@ -273,6 +264,8 @@ class ProxyController extends Controller
                 $return['titles'] = $main[4];
             }
         }
+        else
+            return -1;
 
         if (count($return['sites']) == 0 && strpos($res, '302 Moved') !== false && strpos($res, 'The document has moved') !== false)
             return -2;
