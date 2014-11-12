@@ -600,7 +600,7 @@ class ProxyController extends Controller
                 }
             }
             
-            $title = self::getGoogleResults($word, $proxy[$proxy_index]['host'], $proxy[$proxy_index]['port'], $proxy[$proxy_index]['login'], $proxy[$proxy_index]['password'], 0, '', true);
+            $title = self::getGoogleResults($query, $proxy[$proxy_index]['host'], $proxy[$proxy_index]['port'], $proxy[$proxy_index]['login'], $proxy[$proxy_index]['password'], 0, '', true);
             return $title;
             if ($title == -1 || $title == -2) {
                 if ($title == -2) {
