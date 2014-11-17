@@ -14,6 +14,9 @@ use yii\data\ActiveDataProvider;
 
 class ProxyController extends Controller
 {
+    public static $proxy = [];
+    public static $proxyIndex = 0;
+
     public function behaviors()
     {
         return [
@@ -29,98 +32,88 @@ class ProxyController extends Controller
         ];
     }
     
-    public static function GetProxy($limit = 1, $search_engine = 'google')
-    {
-        global $proxy;
-        
-        if (isset($proxy) && count($proxy) > 0) return $proxy;
+    public static function GetProxy($limit = 1, $searchEngine = 'google')
+    {        
+        if (count(static::$proxy) > 0) return static::$proxy;
         else {
             $result = ProxyBuy::find()->joinWith('proxyLog')->where(
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
+                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s'), ':search_engine' => $searchEngine])
                     ->groupBy(['id'])->orderBy('id')->limit(53)->offset(($limit - 1) * 53)->all();
             
             foreach ($result as $res) {
-                $proxy[] = $res;
+                static::$proxy[] = $res;
             }
-            return $proxy;
+            return static::$proxy;
         }
     }
     
-    public static function GetProxySpider($limit = 0, $search_engine = 'google')
-    {
-        global $proxy;
-        
-        if (isset($proxy) && count($proxy) > 0) return $proxy;
+    public static function GetProxySpider($limit = 0, $searchEngine = 'google')
+    {        
+        if (count(static::$proxy) > 0) return static::$proxy;
         else {
             $result = ProxySpider::find()->joinWith('proxyLog')->where(
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
+                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $searchEngine])
                     ->groupBy(['id'])->orderBy('id')->limit(45)->offset(($limit - 1) * 45)->all();
             
             foreach ($result as $res) {
-                $proxy[] = $res;
+                static::$proxy[] = $res;
             }
-            return $proxy;
+            return static::$proxy;
         }
     }
     
-    public static function GetProxyUkraine($limit = 0, $search_engine = 'google')
-    {
-        global $proxy;
-        
-        if (isset($proxy) && count($proxy) > 0) return $proxy;
+    public static function GetProxyUkraine($limit = 0, $searchEngine = 'google')
+    {   
+        if (count(static::$proxy) > 0) return static::$proxy;
         else {
             $result = ProxyUkraine::find()->joinWith('proxyLog')->where(
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
+                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $searchEngine])
                     ->groupBy(['id'])->orderBy('id')->limit(50)->offset(($limit - 1) * 50)->all();
             
 ;            foreach ($result as $res) {
-                $proxy[] = $res;
+                static::$proxy[] = $res;
             }
-            return $proxy;
+            return static::$proxy;
         }
     }
     
-    public static function GetProxyAdwords($limit = 0, $search_engine = 'google')
+    public static function GetProxyAdwords($limit = 0, $searchEngine = 'google')
     {
-        global $proxy;
-        
-        if (isset($proxy) && count($proxy) > 0) return $proxy;
+        if (count(static::$proxy) > 0) return static::$proxy;
         else {
             $result = ProxyAdwords::find()->joinWith('proxyLog')->where(
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
+                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $searchEngine])
                     ->groupBy(['id'])->orderBy('id')->all();
             
             foreach ($result as $res) {
-                $proxy[] = $res;
+                static::$proxy[] = $res;
             }
-            return $proxy;
+            return static::$proxy;
         }
     }
     
-    public static function GetProxyUSA($limit = 0, $search_engine = 'google')
-    {
-        global $proxy;
-        
-        if (isset($proxy) && count($proxy) > 0) return $proxy;
+    public static function GetProxyUSA($limit = 0, $searchEngine = 'google')
+    {   
+        if (count(static::$proxy) > 0) return static::$proxy;
         else {
             $result = ProxyUsa::find()->joinWith('proxyLog')->where(
                     "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
                     proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $search_engine])
+                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s', time()), ':search_engine' => $searchEngine])
                     ->groupBy(['id'])->orderBy('id')->limit(52)->offset(($limit - 1) * 52)->all();
             
             foreach ($result as $res) {
-                $proxy[] = $res;
+                static::$proxy[] = $res;
             }
-            return $proxy;
+            return static::$proxy;
         }
     }
     
@@ -129,55 +122,55 @@ class ProxyController extends Controller
         $url = 'https://www.google.com.ua/search?q='.urlencode($query);
         $useragent = self::getRandomUserAgent();
         ini_set('user_agent', $useragent);
-        $curl_session = curl_init();
-        curl_setopt($curl_session, CURLOPT_URL, $url);
-        curl_setopt($curl_session, CURLOPT_VERBOSE, 1);
-        curl_setopt($curl_session, CURLOPT_USERAGENT, $useragent);
-        curl_setopt($curl_session, CURLOPT_PROXYUSERPWD, $proxy['login'] . ':' . $proxy['password']);
-        curl_setopt($curl_session, CURLOPT_PROXY, $proxy['host'] . ':' . $proxy['port']);
+        $curlSession = curl_init();
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_VERBOSE, 1);
+        curl_setopt($curlSession, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($curlSession, CURLOPT_PROXYUSERPWD, $proxy['login'] . ':' . $proxy['password']);
+        curl_setopt($curlSession, CURLOPT_PROXY, $proxy['host'] . ':' . $proxy['port']);
         // Turn off the server and peer verification (TrustManager Concept).
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($curl_session, CURLOPT_TIMEOUT, 5);
-        curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curlSession, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
 
-        $output = curl_exec($curl_session);
+        $output = curl_exec($curlSession);
         
-        if(!self::checkProxyResponseCode($proxy['host'], curl_getinfo($curl_session))) {
+        if(!self::checkProxyResponseCode($proxy['host'], curl_getinfo($curlSession))) {
             return false;
         }
         
-        curl_close($curl_session);
+        curl_close($curlSession);
         
         return $output;
     }
     
-    public static function getGoogleResults($word, $host, $port, $login, $password, $start = 0, $lang = '', $is_map = false)
+    public static function getGoogleResults($word, $host, $port, $login, $password, $start = 0, $lang = '', $isMap = false)
     {
         $useragent = self::getRandomUserAgent();
         ini_set('user_agent', $useragent);
         $url = "http://www.google.com/search?q=" . urlencode($word) . '&start=' . $start . $lang;
-        $curl_session = curl_init();
-        curl_setopt($curl_session, CURLOPT_URL, $url);
-        curl_setopt($curl_session, CURLOPT_VERBOSE, 1);
-        curl_setopt($curl_session, CURLOPT_USERAGENT, $useragent);
-        curl_setopt($curl_session, CURLOPT_PROXYUSERPWD, $login . ':' . $password);
-        curl_setopt($curl_session, CURLOPT_PROXY, $host . ':' . $port);
+        $curlSession = curl_init();
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_VERBOSE, 1);
+        curl_setopt($curlSession, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($curlSession, CURLOPT_PROXYUSERPWD, $login . ':' . $password);
+        curl_setopt($curlSession, CURLOPT_PROXY, $host . ':' . $port);
         // Turn off the server and peer verification (TrustManager Concept).
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($curl_session, CURLOPT_TIMEOUT, 5);
-        curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curlSession, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
 
-        $res = curl_exec($curl_session);
+        $res = curl_exec($curlSession);
         
-        if(!self::checkProxyResponseCode($host, curl_getinfo($curl_session))) {
+        if(!self::checkProxyResponseCode($host, curl_getinfo($curlSession))) {
             return false;
         }
         
-        curl_close($curl_session);
+        curl_close($curlSession);
         
-        if(!$is_map)
+        if(!$isMap)
             return static::getGooglePageResults($res);
         else
             return static::getGooglePageResultsMap($res);
@@ -210,16 +203,16 @@ class ProxyController extends Controller
             $stats = explode('(', $stats[1][0]);
             $stats = explode('nobr', $stats[0]);
             $stats = explode(';', $stats[0]);
-            $google_res_count = preg_replace('~[^0-9]+~','',$stats[0]);
+            $googleResCount = preg_replace('~[^0-9]+~','',$stats[0]);
             /*
-            $google_res_count = (int)$stats[1][0];
-            $google_res_count = preg_replace("/\D/","", $stats[1][0]);
+            $googleResCount = (int)$stats[1][0];
+            $googleResCount = preg_replace("/\D/","", $stats[1][0]);
              */
         }
         else
-            $google_res_count = 0;
+            $googleResCount = 0;
             
-        $res_or = $res;
+        $resOr = $res;
 
         $res = substr($res, strpos($res, '<div id="ires">'));
         $pos = strpos($res, 'id="foot"');
@@ -230,17 +223,17 @@ class ProxyController extends Controller
         //'<li class="g"><h3 class="r"><a href="\/url?q=(.*)&amp;sa=U.*">(.*)<\/a><\/h3>.*<span class="st">(.*)<\/span>.*<\/li>';
         //<li class="g"><span style="float:left"><span class="mime">[PDF]</span>&nbsp;</span><h3 class="r"><a href="/url?q=http://www.crestwoodmedcenter.com/Documents/The_Heart_Of_The_Matter.pdf&amp;sa=U&amp;ei=SsFKUbLhAciOtQb6tICwBA&amp;ved=0CBgQFjAA&amp;usg=AFQjCNEOBEX6AX-cVdei-nJo8fl-rkmCdw">The_Heart_Of_The_Matter - Crestwood Medical Center</a></h3><div class="s"><div class="kv" style="margin-bottom:2px"><cite>www.crestwoodmedcenter.com/Documents/The_Heart_Of_The_Matter.pdf</cite><span class="flc"> - <a href="/url?q=http://webcache.googleusercontent.com/search%3Fq%3Dcache:zS1YjSgDAuwJ:http://www.crestwoodmedcenter.com/Documents/The_Heart_Of_The_Matter.pdf%252Bfiletype:pdf%2Bsite:www.crestwoodmedcenter.com%26hl%3Den%26ct%3Dclnk&amp;sa=U&amp;ei=SsFKUbLhAciOtQb6tICwBA&amp;ved=0CBkQIDAA&amp;usg=AFQjCNHTJ1LMFBueE6pyIc2v8pDOlYvjng">Cached</a></span></div><span class="st">PREMIER PATIENT EXPERIENCE. Heart of the Matter. Hospital proves cardiac <br>  procedure is safe and is now fighting to keep the service available <b>...</b></span><br></div></li>
         //print_r($main);exit;
-        preg_match_all('/<p class="_Bmc" style="margin:3px 8px"><a href="(.*)">(.*)<\/a><\/p>/Us', $res, $offen_seek);
+        preg_match_all('/<p class="_Bmc" style="margin:3px 8px"><a href="(.*)">(.*)<\/a><\/p>/Us', $res, $offenSeek);
         
         $return['links'] = $main[1];
         $return['titles'] = $main[2];
         $return['descriptions'] = $main[3];
-        $return['google_res_count'] = $google_res_count;
-        $return['offen_seek_links'] = $offen_seek[1];
-        $return['offen_seek_text'] = preg_replace('~(<b>|</b>)~','',$offen_seek[2]);
+        $return['google_res_count'] = $googleResCount;
+        $return['offen_seek_links'] = $offenSeek[1];
+        $return['offen_seek_text'] = preg_replace('~(<b>|</b>)~','',$offenSeek[2]);
         $return['relevant'] = $relevant;
 
-        if (count($return['links']) == 0 && strpos($res_or, '302 Moved') !== false && strpos($res_or, 'The document has moved') !== false)
+        if (count($return['links']) == 0 && strpos($resOr, '302 Moved') !== false && strpos($resOr, 'The document has moved') !== false)
             return -2;
 
         return $return;
@@ -280,25 +273,25 @@ class ProxyController extends Controller
         ini_set('user_agent', $useragent);
         $url = "http://search.yahoo.com/search;_ylt=Apg.fQFBzxhPrDgbbsxmnm2bvZx4?p=" . urlencode($word) . '&b=' . $start;
         //$url = "http://search.yahoo.com/search;_ylt=ApLYy1iuTRLVmjcbCmMs4u2bvZx4?p=filetype%3Apdf&toggle=1&cop=mss&ei=UTF-8&fr=yfp-t-900";
-        $curl_session = curl_init();
-        curl_setopt($curl_session, CURLOPT_URL, $url);
-        curl_setopt($curl_session, CURLOPT_VERBOSE, 1);
-        curl_setopt($curl_session, CURLOPT_USERAGENT, $useragent);
-        curl_setopt($curl_session, CURLOPT_PROXYUSERPWD, $login . ':' . $password);
-        curl_setopt($curl_session, CURLOPT_PROXY, $host . ':' . $port);
+        $curlSession = curl_init();
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_VERBOSE, 1);
+        curl_setopt($curlSession, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($curlSession, CURLOPT_PROXYUSERPWD, $login . ':' . $password);
+        curl_setopt($curlSession, CURLOPT_PROXY, $host . ':' . $port);
         // Turn off the server and peer verification (TrustManager Concept).
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($curl_session, CURLOPT_TIMEOUT, 30);
-        curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curlSession, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
 
-        $res = curl_exec($curl_session);
+        $res = curl_exec($curlSession);
         
-        if(!self::checkProxyResponseCode($host, curl_getinfo($curl_session), 'yahoo', 3600)) {
+        if(!self::checkProxyResponseCode($host, curl_getinfo($curlSession), 'yahoo', 3600)) {
             return false;
         }
         
-        curl_close($curl_session);
+        curl_close($curlSession);
 
         if (!$res || $res == '' || strlen($res) < 10) {
             echo '-1';
@@ -310,7 +303,7 @@ class ProxyController extends Controller
         $return = array();
         $return['pages'] = intval(str_replace(',', '', $main[1][0]));
 
-        $res_or = $res;
+        $resOr = $res;
 
         $res = substr($res, strpos($res, '<h2>Search results'));
         $pos = strpos($res, 'id="pg"');
@@ -341,25 +334,25 @@ class ProxyController extends Controller
         $useragent = self::getRandomUserAgent();
         ini_set('user_agent', $useragent);
         $url = "http://www.bing.com/search?q=" . urlencode($word) . '&b=' . $start;
-        $curl_session = curl_init();
-        curl_setopt($curl_session, CURLOPT_URL, $url);
-        curl_setopt($curl_session, CURLOPT_VERBOSE, 1);
-        curl_setopt($curl_session, CURLOPT_USERAGENT, $useragent);
-        curl_setopt($curl_session, CURLOPT_PROXYUSERPWD, $login.':'.$password);
-        curl_setopt($curl_session, CURLOPT_PROXY, $host.':'.$port);
+        $curlSession = curl_init();
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_VERBOSE, 1);
+        curl_setopt($curlSession, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($curlSession, CURLOPT_PROXYUSERPWD, $login.':'.$password);
+        curl_setopt($curlSession, CURLOPT_PROXY, $host.':'.$port);
         // Turn off the server and peer verification (TrustManager Concept).
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($curl_session, CURLOPT_TIMEOUT, 30);
-        curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curlSession, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
 
-        $res = curl_exec($curl_session);
+        $res = curl_exec($curlSession);
         
-        if(!self::checkProxyResponseCode($host, curl_getinfo($curl_session), 'bing', 3600)) {
+        if(!self::checkProxyResponseCode($host, curl_getinfo($curlSession), 'bing', 3600)) {
             return false;
         }
         
-        curl_close($curl_session);
+        curl_close($curlSession);
 
         if (!$res || $res == '' || strlen($res) < 10) {
             echo '-1';
@@ -377,7 +370,7 @@ class ProxyController extends Controller
         $return=array();
         $return['pages']=intval(str_replace(array(',', ' ', '&#160;'),'',$main[1][0]));
 
-        $res_or=$res;
+        $resOr=$res;
 
         if(strpos($res,'ul id="wg0"') > 0){
             $res=substr($res,strpos($res,'ul id="wg0"'));
@@ -429,27 +422,27 @@ class ProxyController extends Controller
 
         $url = "http://yandex.com/yandsearch?".implode("&", $word);
 
-        $curl_session = curl_init();
-        curl_setopt($curl_session, CURLOPT_URL, $url);
-        curl_setopt($curl_session, CURLOPT_VERBOSE, 1);
-        curl_setopt($curl_session, CURLOPT_USERAGENT, $useragent);
-        curl_setopt($curl_session, CURLOPT_PROXYUSERPWD, $login.':'.$password);
-        curl_setopt($curl_session, CURLOPT_PROXY, $host.':'.$port);
+        $curlSession = curl_init();
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_VERBOSE, 1);
+        curl_setopt($curlSession, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($curlSession, CURLOPT_PROXYUSERPWD, $login.':'.$password);
+        curl_setopt($curlSession, CURLOPT_PROXY, $host.':'.$port);
         // Turn off the server and peer verification (TrustManager Concept).
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($curl_session, CURLOPT_COOKIEFILE, "ya_cookies/{$host}-{$port}.txt");
-		curl_setopt($curl_session, CURLOPT_COOKIEJAR, "ya_cookies/{$host}-{$port}.txt");
-        curl_setopt($curl_session, CURLOPT_TIMEOUT, 30);
-        curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curlSession, CURLOPT_COOKIEFILE, "ya_cookies/{$host}-{$port}.txt");
+		curl_setopt($curlSession, CURLOPT_COOKIEJAR, "ya_cookies/{$host}-{$port}.txt");
+        curl_setopt($curlSession, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
 
-        $res = curl_exec($curl_session);
+        $res = curl_exec($curlSession);
         
-        if(!self::checkProxyResponseCode($host, curl_getinfo($curl_session), 'yandex', 3600)) {
+        if(!self::checkProxyResponseCode($host, curl_getinfo($curlSession), 'yandex', 3600)) {
             return false;
         }
         
-        curl_close($curl_session);
+        curl_close($curlSession);
 
         $fp_page = fopen("data/yandex_".$query_txt.".html", 'a');
         fputs($fp_page, "{$login} / {$password} / {$host} / {$port} / {$url}<br>".$res);
@@ -463,7 +456,7 @@ class ProxyController extends Controller
 
         $return['pages']=100;
 
-        $res_or=$res;
+        $resOr=$res;
 
         $res=substr($res,strpos($res,'ul id="wg0"'));
         $pos=strpos($res,'Pagination');
@@ -488,27 +481,25 @@ class ProxyController extends Controller
     }
     
     public static function proxyResults($word, $start, $yahoo =0)
-    {
-        global $proxy, $proxy_index, $proxy_table;
-        
+    {   
         $search = true;
         $p = 0;
         $step = 0;
             
         while ($search) {
-            while($proxy_index < count($proxy) && !isset($proxy[$proxy_index])) {
-                $proxy_index++;
+            while(static::$proxyIndex < count(static::$proxy) && !isset(static::$proxy[static::$proxyIndex])) {
+                static::$proxyIndex++;
             }
             
-            if (!isset($proxy[$proxy_index])) {
-                $proxy_index = 0;
+            if (!isset(static::$proxy[static::$proxyIndex])) {
+                static::$proxyIndex = 0;
                 return false;
             }
             
-            if ($proxy[$proxy_index]['active'] == 0) {
-                $proxy_index++;
-                if ($proxy_index >= count($proxy)) {
-                    $proxy_index = 0;
+            if (static::$proxy[static::$proxyIndex]['active'] == 0) {
+                static::$proxyIndex++;
+                if (static::$proxyIndex >= count(static::$proxy)) {
+                    static::$proxyIndex = 0;
                     $p++;
                     if ($p > 1) {
                         return false;
@@ -516,30 +507,18 @@ class ProxyController extends Controller
                 }
             }
             if ($yahoo==3){
-                $title = self::getYandexResults($word, $proxy[$proxy_index]['host'], $proxy[$proxy_index]['port'], $proxy[$proxy_index]['login'], $proxy[$proxy_index]['password'], $start);
+                $title = self::getYandexResults($word, static::$proxy[static::$proxyIndex]['host'], static::$proxy[static::$proxyIndex]['port'], static::$proxy[static::$proxyIndex]['login'], static::$proxy[static::$proxyIndex]['password'], $start);
             }elseif ($yahoo==2)
-                $title = self::getBingResults($word, $proxy[$proxy_index]['host'], $proxy[$proxy_index]['port'], $proxy[$proxy_index]['login'], $proxy[$proxy_index]['password'], $start);
+                $title = self::getBingResults($word, static::$proxy[static::$proxyIndex]['host'], static::$proxy[static::$proxyIndex]['port'], static::$proxy[static::$proxyIndex]['login'], static::$proxy[static::$proxyIndex]['password'], $start);
             elseif ($yahoo==1)
-                $title = self::getYahooResults($word, $proxy[$proxy_index]['host'], $proxy[$proxy_index]['port'], $proxy[$proxy_index]['login'], $proxy[$proxy_index]['password'], $start);
+                $title = self::getYahooResults($word, static::$proxy[static::$proxyIndex]['host'], static::$proxy[static::$proxyIndex]['port'], static::$proxy[static::$proxyIndex]['login'], static::$proxy[static::$proxyIndex]['password'], $start);
             else
-                $title = self::getGoogleResults($word, $proxy[$proxy_index]['host'], $proxy[$proxy_index]['port'], $proxy[$proxy_index]['login'], $proxy[$proxy_index]['password'], $start);
+                $title = self::getGoogleResults($word, static::$proxy[static::$proxyIndex]['host'], static::$proxy[static::$proxyIndex]['port'], static::$proxy[static::$proxyIndex]['login'], static::$proxy[static::$proxyIndex]['password'], $start);
             if ($title == -1 || $title == -2) {
-                if ($title == -2) {
-                    $connection = \Yii::$app->dbPdfDb;
-                    $connection->open();
-                    if ($yahoo==3)
-                        $connection->createCommand("UPDATE $proxy_table SET yandex_failure=yandex_failure+1 WHERE id=" . $proxy[$proxy_index]['id'])->execute();
-                    elseif ($yahoo==2)
-                        $connection->createCommand("UPDATE $proxy_table SET bing_failure=bing_failure+1 WHERE id=" . $proxy[$proxy_index]['id'])->execute();
-                    elseif ($yahoo==1)
-                        $connection->createCommand("UPDATE $proxy_table SET yahoo_failure=yahoo_failure+1 WHERE id=" . $proxy[$proxy_index]['id'])->execute();
-                    else
-                        $connection->createCommand("UPDATE $proxy_table SET failure=failure+1 WHERE id=" . $proxy[$proxy_index]['id'])->execute();
-                }
-                $proxy[$proxy_index]['active'] = 0;
-                $proxy_index++;
-                if ($proxy_index >= count($proxy)) {
-                    $proxy_index = 0;
+                static::$proxy[static::$proxyIndex]['active'] = 0;
+                static::$proxyIndex++;
+                if (static::$proxyIndex >= count(static::$proxy)) {
+                    static::$proxyIndex = 0;
                     $p++;
                     if ($p > 1) {
                         return false;
@@ -547,9 +526,9 @@ class ProxyController extends Controller
                 }
             } else {
                 $search = false;
-                $proxy_index++;
-                if ($proxy_index >= count($proxy)) {
-                    $proxy_index = 0;
+                static::$proxyIndex++;
+                if (static::$proxyIndex >= count(static::$proxy)) {
+                    static::$proxyIndex = 0;
                     if($yahoo == 0){
                     	//sleep(60 - count($proxy) + 20);
                         sleep(30);
@@ -566,26 +545,24 @@ class ProxyController extends Controller
     
     public static function proxyResultsGMap($query)
     {
-        global $proxy, $proxy_index, $proxy_table;
-        
         $search = true;
         $p = 0;
         $step = 0;
             
         while ($search) {
-            while($proxy_index < count($proxy) && !isset($proxy[$proxy_index])) {
-                $proxy_index++;
+            while(static::$proxyIndex < count(static::$proxy) && !isset(static::$proxy[static::$proxyIndex])) {
+                static::$proxyIndex++;
             }
             
-            if (!isset($proxy[$proxy_index])) {
-                $proxy_index = 0;
+            if (!isset(static::$proxy[static::$proxyIndex])) {
+                static::$proxyIndex = 0;
                 return false;
             }
             
-            if ($proxy[$proxy_index]['active'] == 0) {
-                $proxy_index++;
-                if ($proxy_index >= count($proxy)) {
-                    $proxy_index = 0;
+            if (static::$proxy[static::$proxyIndex]['active'] == 0) {
+                static::$proxyIndex++;
+                if (static::$proxyIndex >= count(static::$proxy)) {
+                    static::$proxyIndex = 0;
                     $p++;
                     if ($p > 1) {
                         return false;
@@ -593,18 +570,13 @@ class ProxyController extends Controller
                 }
             }
             
-            $title = self::getGoogleResults($query, $proxy[$proxy_index]['host'], $proxy[$proxy_index]['port'], $proxy[$proxy_index]['login'], $proxy[$proxy_index]['password'], 0, '', true);
+            $title = self::getGoogleResults($query, static::$proxy[static::$proxyIndex]['host'], static::$proxy[static::$proxyIndex]['port'], $proxy[static::$proxyIndex]['login'], static::$proxy[static::$proxyIndex]['password'], 0, '', true);
             return $title;
             if ($title == -1 || $title == -2) {
-                if ($title == -2) {
-                    $connection = \Yii::$app->dbPdfDb;
-                    $connection->open();
-                    $connection->createCommand("UPDATE $proxy_table SET failure=failure+1 WHERE id=" . $proxy[$proxy_index]['id'])->execute();
-                }
-                $proxy[$proxy_index]['active'] = 0;
-                $proxy_index++;
-                if ($proxy_index >= count($proxy)) {
-                    $proxy_index = 0;
+                static::$proxy[static::$proxyIndex]['active'] = 0;
+                static::$proxyIndex++;
+                if (static::$proxyIndex >= count(static::$proxy)) {
+                    static::$proxyIndex = 0;
                     $p++;
                     if ($p > 1) {
                         return false;
@@ -612,9 +584,9 @@ class ProxyController extends Controller
                 }
             } else {
                 $search = false;
-                $proxy_index++;
-                if ($proxy_index >= count($proxy)) {
-                    $proxy_index = 0;
+                static::$proxyIndex++;
+                if (static::$proxyIndex >= count(static::$proxy)) {
+                    static::$proxyIndex = 0;
                     if($yahoo == 0){
                     	//sleep(60 - count($proxy) + 20);
                         sleep(30);
@@ -642,30 +614,30 @@ class ProxyController extends Controller
             $getInfo = false,
             $autoRedirect = false
             ){
-        $curl_session = curl_init();
-        curl_setopt($curl_session, CURLOPT_USERAGENT, static::getRandomUserAgent());
-        curl_setopt($curl_session, CURLOPT_URL, $url);
-        curl_setopt($curl_session, CURLOPT_VERBOSE, 1);
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl_session, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($curl_session, CURLOPT_TIMEOUT, 10);
-        curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, 1);
+        $curlSession = curl_init();
+        curl_setopt($curlSession, CURLOPT_USERAGENT, static::getRandomUserAgent());
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_VERBOSE, 1);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curlSession, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curlSession, CURLOPT_TIMEOUT, 10);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
         if ($proxy){
-            curl_setopt($curl_session, CURLOPT_PROXYUSERPWD, $proxy['login'] . ':' . $proxy['password']);
-            curl_setopt($curl_session, CURLOPT_PROXY, $proxy['host'] . ':' . $proxy['port']);
+            curl_setopt($curlSession, CURLOPT_PROXYUSERPWD, $proxy['login'] . ':' . $proxy['password']);
+            curl_setopt($curlSession, CURLOPT_PROXY, $proxy['host'] . ':' . $proxy['port']);
         }
         
         if ($autoRedirect){
-            curl_setopt($curl_session, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($curlSession, CURLOPT_FOLLOWLOCATION, true);
         }
 
-        $res = curl_exec($curl_session);
+        $res = curl_exec($curlSession);
         if($getInfo){
-            $info = curl_getinfo($curl_session); 
+            $info = curl_getinfo($curlSession); 
             $infoRes = $res;
             $res = ['page' => $infoRes, 'info' => $info];
         }
-        curl_close($curl_session);
+        curl_close($curlSession);
 
         return $res;
     }
@@ -1077,21 +1049,20 @@ class ProxyController extends Controller
      * @param int $timeout - pause in seconds (default 1 hour)
      * @return boolean
      */
-    public static function checkProxyResponseCode($proxy_ip, $curl_info, $search_engine = 'google', $timeout = 3600) {
-        global $proxy;
-        $proxy_ip = trim($proxy_ip);
-        if($curl_info['http_code'] != 200 && $proxy_ip != '') {
+    public static function checkProxyResponseCode($proxyIp, $curlInfo, $searchEngine = 'google', $timeout = 3600) {
+        $proxyIp = trim($proxyIp);
+        if($curlInfo['http_code'] != 200 && $proxyIp != '') {
             $model = new ProxyLog();
-            $model->ip = $proxy_ip;
-            $model->search_engine = $search_engine;
-            $model->code = $curl_info['http_code'];
-            $model->dt = date('Y-m-d H:i:s', time());
+            $model->ip = $proxyIp;
+            $model->search_engine = $searchEngine;
+            $model->code = $curlInfo['http_code'];
+            $model->dt = date('Y-m-d H:i:s');
             $model->dt_unblock = date('Y-m-d H:i:s', (time() + $timeout));
             $model->save();
                         
-            foreach ($proxy as $key => $val) {
-                if($val['host'] == $proxy_ip && $curl_info['http_code'] != 0) {
-                    unset($proxy[$key]);
+            foreach (static::$proxy as $key => $val) {
+                if($val['host'] == $proxyIp && $curlInfo['http_code'] != 0) {
+                    unset(static::$proxy[$key]);
                 }
             }
                         
