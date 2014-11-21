@@ -149,7 +149,7 @@ class ProxyController extends Controller
     {
         $useragent = self::getRandomUserAgent();
         ini_set('user_agent', $useragent);
-        $url = "http://www.google.com/search?q=" . urlencode($word) . '&start=' . $start . $lang;
+        $url = "http://www.google.com/search?q=" . urlencode($word) . '&start=' . $start . $lang.'&gws_rd=cr';
         $curlSession = curl_init();
         curl_setopt($curlSession, CURLOPT_URL, $url);
         curl_setopt($curlSession, CURLOPT_VERBOSE, 1);
