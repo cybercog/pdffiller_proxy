@@ -18,16 +18,16 @@ class ProxyCronController extends Controller
 
     public function actionBadProxy()
     {
-        $this->checkProxies(ProxyBuy::find()->where('host = "89.208.144.108"')->all());
-//        $this->checkProxies(ProxyAdwords::find()->all());
-//        $this->checkProxies(ProxyUkraine::find()->all());
-//        $this->checkProxies(ProxyUsa::find()->all());
-//        $this->checkProxies(ProxySpider::find()->all());
+        $this->checkProxies(ProxyBuy::find()->all());
+        $this->checkProxies(ProxyAdwords::find()->all());
+        $this->checkProxies(ProxyUkraine::find()->all());
+        $this->checkProxies(ProxyUsa::find()->all());
+        $this->checkProxies(ProxySpider::find()->all());
 
         \Yii::$app->mailer
             ->compose('proxyBlockReport', ['count_total' => count($this->_badProxies), 'data' => $this->_badProxies])
             ->setFrom('maxim.gavrilenko@pdffiller.com')
-            ->setTo(['maxim.gavrilenko@pdffiller.com'/*, 'koshevchenko@gmail.com'*/])
+            ->setTo(['maxim.gavrilenko@pdffiller.com', 'koshevchenko@gmail.com'])
             ->setSubject('Proxy Not Worked')
             ->send();
     }
