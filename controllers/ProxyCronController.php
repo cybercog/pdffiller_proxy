@@ -18,11 +18,11 @@ class ProxyCronController extends Controller
 
     public function actionBadProxy()
     {
-        $this->checkProxies(ProxyBuy::find()->all());
-        $this->checkProxies(ProxyAdwords::find()->all());
-        $this->checkProxies(ProxyUkraine::find()->all());
-        $this->checkProxies(ProxyUsa::find()->all());
-        $this->checkProxies(ProxySpider::find()->all());
+        $this->checkProxies(ProxyBuy::find()->all(), ProxyBuy::tableName());
+        $this->checkProxies(ProxyAdwords::find()->all(), ProxyAdwords::tableName());
+        $this->checkProxies(ProxyUkraine::find()->all(), ProxyUkraine::tableName());
+        $this->checkProxies(ProxyUsa::find()->all(), ProxyUsa::tableName());
+        $this->checkProxies(ProxySpider::find()->all(), ProxySpider::tableName());
 
         \Yii::$app->mailer
             ->compose('proxyBlockReport', ['count_total' => count($this->_badProxies), 'data' => $this->_badProxies])
@@ -32,7 +32,17 @@ class ProxyCronController extends Controller
             ->send();
     }
     
-    public function checkProxies($proxyModel) {
+    /**
+     * Fill blocked proxies
+     * @param object $proxyModel
+     * @param string $table
+     */
+    public function checkProxies($proxyModel, $table) {
+        
+        if(!isset($this->_badProxies[$table])) {
+            $this->_badProxies[$table] = [];
+        }
+        
         foreach($proxyModel as $proxyM) {
             $proxy = [
                 'login' => $proxyM->login,
@@ -44,7 +54,7 @@ class ProxyCronController extends Controller
             
             if(isset($res['info'])) {
                 if($res['info']['http_code'] == 0) {
-                    $this->_badProxies[] = $proxy;
+                    $this->_badProxies[$table][] = $proxy;
                 }
             }
             
