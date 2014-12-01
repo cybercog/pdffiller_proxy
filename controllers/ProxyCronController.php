@@ -57,7 +57,7 @@ class ProxyCronController extends Controller
                     $this->_badProxies[$table][] = $proxy;
                 }
             }
-            
         }
+        
     }
 }
