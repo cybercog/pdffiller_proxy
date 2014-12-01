@@ -13,15 +13,26 @@ use maxlen\proxy\models\ProxySpider;
 
 class ProxyCronController extends Controller
 {
+    
+    private $_badProxies = [];
 
     public function actionBadProxy()
     {
-        $badProxies = [];
-        
-//        $proxyModel = ProxyBuy::find()->count();
-        $proxyModel = ProxyController::GetProxy(2);
-//        var_dump($proxyModel);
-//        die();
+        $this->checkProxies(ProxyBuy::find()->where('host = "89.208.144.108"')->all());
+//        $this->checkProxies(ProxyAdwords::find()->all());
+//        $this->checkProxies(ProxyUkraine::find()->all());
+//        $this->checkProxies(ProxyUsa::find()->all());
+//        $this->checkProxies(ProxySpider::find()->all());
+
+        \Yii::$app->mailer
+            ->compose('proxyBlockReport', ['count_total' => count($this->_badProxies), 'data' => $this->_badProxies])
+            ->setFrom('maxim.gavrilenko@pdffiller.com')
+            ->setTo(['maxim.gavrilenko@pdffiller.com'/*, 'koshevchenko@gmail.com'*/])
+            ->setSubject('Proxy Not Worked')
+            ->send();
+    }
+    
+    public function checkProxies($proxyModel) {
         foreach($proxyModel as $proxyM) {
             $proxy = [
                 'login' => $proxyM->login,
@@ -32,16 +43,11 @@ class ProxyCronController extends Controller
             $res = ProxyController::getHTML('http://pdffiller.com.ua', $proxy, true);
             
             if(isset($res['info'])) {
-                if($res['info']['http_code'] !== 200) {
-                    var_dump($res['info']);
-                    die();
+                if($res['info']['http_code'] == 0) {
+                    $this->_badProxies[] = $proxy;
                 }
             }
             
         }
-//        ini_set('display_errors',1);
-//        ini_set('max_execution_time', 0);
-//        ini_set("memory_limit","10000M");
-
     }
 }
