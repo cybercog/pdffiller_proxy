@@ -610,7 +610,7 @@ class ProxyController extends Controller
      */
     public static function getHTML(
             $url, 
-            $proxy = array(),
+            $proxy = [],
             $getInfo = false,
             $autoRedirect = false
             ){
