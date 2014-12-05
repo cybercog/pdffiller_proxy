@@ -1,8 +1,7 @@
 <?php
 
-namespace maxlen\proxy\controllers;
+namespace maxlen\proxy\helpers;
 
-use yii\web\Controller;
 use maxlen\proxy\models\ProxyAdwords;
 use maxlen\proxy\models\ProxyBuy;
 use maxlen\proxy\models\ProxyLog;
@@ -12,11 +11,17 @@ use maxlen\proxy\models\ProxySpider;
 
 use yii\data\ActiveDataProvider;
 
-class ProxyController extends Controller
+class Proxy
 {
     public static $proxy = [];
     public static $proxyIndex = 0;
     
+    const PROXY_BUY = 'ProxyBuy';
+    const PROXY_SPIDER = 'ProxySpider';
+    const PROXY_UKRAINE = 'ProxyUkraine';
+    const PROXY_ADWORDS = 'ProxyAdwords';
+    const PROXY_USA = 'ProxyUsa';
+
     /**
      * Get scope of proxies
      * 
@@ -24,89 +29,18 @@ class ProxyController extends Controller
      * @param string $searchEngine - search engine ('google', 'yandex')
      * @return array
      */
-    public static function GetProxy($limit = 1, $searchEngine = 'google')
+    public static function getProxy($proxy, $limit = 1, $searchEngine = 'google')
     {
         if (count(static::$proxy) > 0) return static::$proxy;
         else {
-            $result = ProxyBuy::find()->joinWith('proxyLog')->where(
-                    "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
-                    proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s'), ':search_engine' => $searchEngine])
-                    ->groupBy(['id'])->orderBy('id')->limit(53)->offset(($limit - 1) * 53)->all();
-            
-            foreach ($result as $res) {
-                static::$proxy[] = $res;
-            }
-            return static::$proxy;
+            $modelName = "maxlen\proxy\models\\".$proxy;
+            $result = $modelName::getProxyPull($limit, $searchEngine);
         }
-    }
-    
-    public static function GetProxySpider($limit = 0, $searchEngine = 'google')
-    {        
-        if (count(static::$proxy) > 0) return static::$proxy;
-        else {
-            $result = ProxySpider::find()->joinWith('proxyLog')->where(
-                    "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
-                    proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s'), ':search_engine' => $searchEngine])
-                    ->groupBy(['id'])->orderBy('id')->limit(45)->offset(($limit - 1) * 45)->all();
             
-            foreach ($result as $res) {
-                static::$proxy[] = $res;
-            }
-            return static::$proxy;
+        foreach ($result as $res) {
+            static::$proxy[] = $res;
         }
-    }
-    
-    public static function GetProxyUkraine($limit = 0, $searchEngine = 'google')
-    {   
-        if (count(static::$proxy) > 0) return static::$proxy;
-        else {
-            $result = ProxyUkraine::find()->joinWith('proxyLog')->where(
-                    "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
-                    proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s'), ':search_engine' => $searchEngine])
-                    ->groupBy(['id'])->orderBy('id')->limit(50)->offset(($limit - 1) * 50)->all();
-            
-;            foreach ($result as $res) {
-                static::$proxy[] = $res;
-            }
-            return static::$proxy;
-        }
-    }
-    
-    public static function GetProxyAdwords($limit = 0, $searchEngine = 'google')
-    {
-        if (count(static::$proxy) > 0) return static::$proxy;
-        else {
-            $result = ProxyAdwords::find()->joinWith('proxyLog')->where(
-                    "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
-                    proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s'), ':search_engine' => $searchEngine])
-                    ->groupBy(['id'])->orderBy('id')->all();
-            
-            foreach ($result as $res) {
-                static::$proxy[] = $res;
-            }
-            return static::$proxy;
-        }
-    }
-    
-    public static function GetProxyUSA($limit = 0, $searchEngine = 'google')
-    {   
-        if (count(static::$proxy) > 0) return static::$proxy;
-        else {
-            $result = ProxyUsa::find()->joinWith('proxyLog')->where(
-                    "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
-                    proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
-                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s'), ':search_engine' => $searchEngine])
-                    ->groupBy(['id'])->orderBy('id')->limit(52)->offset(($limit - 1) * 52)->all();
-            
-            foreach ($result as $res) {
-                static::$proxy[] = $res;
-            }
-            return static::$proxy;
-        }
+        return static::$proxy;
     }
     
     public static function getGoogleSearchResPage($query, $proxy)
@@ -404,7 +338,6 @@ class ProxyController extends Controller
 
     public static function getYandexResults($word, $host, $port, $login, $password, $start)
     {
-        //$useragent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:23.0) Gecko/20100101 Firefox/23.0";
         $useragent = self::getRandomUserAgent();
         ini_set('user_agent', $useragent);
 

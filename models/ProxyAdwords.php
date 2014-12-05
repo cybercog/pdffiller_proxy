@@ -71,4 +71,12 @@ class ProxyAdwords extends \yii\db\ActiveRecord
             'yahoo_failure' => 'Yahoo Failure',
         ];
     }
+    
+    public static function getProxyPull($limit = 1, $searchEngine = 'google') {
+        return static::find()->joinWith('proxyLog')->where(
+                    "active = :active AND (proxy_log.dt_unblock < :dt_unblock AND proxy_log.search_engine = :search_engine) OR 
+                    proxy_log.search_engine = :search_engine OR proxy_log.search_engine IS NULL", 
+                    [':active' => 1, ':dt_unblock' => date('Y-m-d H:i:s'), ':search_engine' => $searchEngine])
+                    ->groupBy(['id'])->orderBy('id')->all();
+    }
 }
