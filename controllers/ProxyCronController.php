@@ -53,7 +53,7 @@ class ProxyCronController extends Controller
                 'port' => $proxyM->port,
                 ];
             $res = ProxyController::getHTML('http://pdffiller.com.ua', $proxy, true);
-            
+                    
             if(isset($res['info'])) {
                 if($res['info']['http_code'] == 0) {
                     $this->_badProxies[$table][] = $proxy;

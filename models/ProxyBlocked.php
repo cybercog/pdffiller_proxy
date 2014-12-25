@@ -14,6 +14,7 @@ use Yii;
  */
 class ProxyBlocked extends \yii\db\ActiveRecord
 {
+    public $cnt = 0;
     /**
      * @inheritdoc
      */
@@ -52,6 +53,7 @@ class ProxyBlocked extends \yii\db\ActiveRecord
             'id' => 'ID',
             'ip' => 'Ip',
             'table' => 'Table',
+            'cnt' => 'Count of duplicates',
             'create_date' => 'Create Date',
         ];
     }

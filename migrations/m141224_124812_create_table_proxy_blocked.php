@@ -15,7 +15,7 @@ class m141224_124812_create_table_proxy_blocked extends Migration
     public function safeUp()
     {
         $this->createTable($this->_table, [
-            'id'       => Schema::TYPE_INTEGER,
+            'id'       =>  Schema::TYPE_PK,
             'ip'       => 'varchar(30) NOT NULL',
             'table'    => 'varchar(30) NOT NULL',
             'create_date'   => Schema::TYPE_DATETIME . ' default NULL',
