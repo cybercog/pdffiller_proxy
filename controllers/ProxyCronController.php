@@ -26,12 +26,12 @@ class ProxyCronController extends Controller
         $this->checkProxies(ProxyUsa::find()->all(), ProxyUsa::tableName());
         $this->checkProxies(ProxySpider::find()->all(), ProxySpider::tableName());
 
-//        \Yii::$app->mailer
-//            ->compose('proxyBlockReport', ['count_total' => $this->_countBadProxies, 'data' => $this->_badProxies])
-//            ->setFrom('maxim.gavrilenko@pdffiller.com')
-//            ->setTo(['maxim.gavrilenko@pdffiller.com', 'koshevchenko@gmail.com'])
-//            ->setSubject('Proxy Not Worked')
-//            ->send();
+        \Yii::$app->mailer
+            ->compose('proxyBlockReport', ['count_total' => $this->_countBadProxies, 'data' => $this->_badProxies])
+            ->setFrom('maxim.gavrilenko@pdffiller.com')
+            ->setTo(['maxim.gavrilenko@pdffiller.com', 'koshevchenko@gmail.com'])
+            ->setSubject('Proxy Not Worked')
+            ->send();
     }
     
     /**
