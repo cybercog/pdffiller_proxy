@@ -22,6 +22,11 @@ class Proxy
     const PROXY_ADWORDS = 'ProxyAdwords';
     const PROXY_USA = 'ProxyUsa';
     
+    const GOOGLE = 'google';
+    const YAHOO = 'yahoo';
+    const BING = 'bing';
+    const YANDEX = 'yandex';
+    
     /**
      * Set spool for proxies
      * 
