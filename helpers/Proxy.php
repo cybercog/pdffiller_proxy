@@ -34,7 +34,7 @@ class Proxy
      * @param type $searchEngine
      * @return type
      */
-    public static function setProxySpool($cronId, $searchEngine = 'google')
+    public static function setProxySpool($cronId, $searchEngine = self::GOOGLE)
     {   
         switch($cronId){
             case 1:
@@ -83,7 +83,7 @@ class Proxy
      * @param string $searchEngine - search engine ('google', 'yandex')
      * @return array
      */
-    public static function getProxy($proxy, $limit = 1, $searchEngine = 'google')
+    public static function getProxy($proxy, $limit = 1, $searchEngine = self::GOOGLE)
     {
         if (count(static::$proxy) > 0) return static::$proxy;
         else {
@@ -1028,7 +1028,7 @@ class Proxy
      * @param int $timeout - pause in seconds (default 1 hour)
      * @return boolean
      */
-    public static function checkProxyResponseCode($proxyIp, $curlInfo, $searchEngine = 'google', $timeout = 3600) {
+    public static function checkProxyResponseCode($proxyIp, $curlInfo, $searchEngine = self::GOOGLE, $timeout = 3600) {
         $proxyIp = trim($proxyIp);
         if($curlInfo['http_code'] != 200 && $proxyIp != '') {
             $model = new ProxyLog();
