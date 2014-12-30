@@ -21,6 +21,55 @@ class Proxy
     const PROXY_UKRAINE = 'ProxyUkraine';
     const PROXY_ADWORDS = 'ProxyAdwords';
     const PROXY_USA = 'ProxyUsa';
+    
+    /**
+     * Set spool for proxies
+     * 
+     * @param type $cronId
+     * @param type $searchEngine
+     * @return type
+     */
+    public static function setProxySpool($cronId, $searchEngine = 'google')
+    {   
+        switch($cronId){
+            case 1:
+                self::getProxy(self::PROXY_UKRAINE, 1, $searchEngine);
+                break;
+            case 2:
+                self::getProxy(self::PROXY_UKRAINE, 2, $searchEngine);
+                break;
+            case 3:
+                self::getProxy(self::PROXY_UKRAINE, 3, $searchEngine);
+                break;
+            case 4:
+                self::getProxy(self::PROXY_SPIDER, 1, $searchEngine);
+                break;
+            case 5:
+                self::getProxy(self::PROXY_SPIDER, 2, $searchEngine);
+                break;
+            case 6:
+                self::getProxy(self::PROXY_SPIDER, 3, $searchEngine);
+                break;
+            case 7:
+                self::getProxy(self::PROXY_SPIDER, 4, $searchEngine);
+                break;
+            case 8:
+                self::getProxy(self::PROXY_BUY, 2, $searchEngine);
+                break;
+            case 9:
+                self::getProxy(self::PROXY_ADWORDS, 1, $searchEngine);
+                break;
+            case 10:
+                self::getProxy(self::PROXY_USA, 1, $searchEngine);
+                break;
+            case 11:
+                self::getProxy(self::PROXY_BUY, 1, $searchEngine);
+                break;
+            default:
+                self::getProxy(self::PROXY_UKRAINE, 3, $searchEngine);
+                break;
+        }
+    }
 
     /**
      * Get scope of proxies
