@@ -210,7 +210,7 @@ class Proxy
         preg_match_all('/.*<li.*><h3><a.*href="(.*)">(.*)<\/a><\/h3>.*<cite>(.*)<\/cite>.*<span class="ac">(.*)<\/span>.*<\/li>.*/Us', $linksAds[1][0], $linksAdsRes);
 
         $linksAdsResDomains = [];
-        if(!empty($linksAdsRes[3])) {
+        if(isset($linksAdsRes[3]) && !empty($linksAdsRes[3])) {
             foreach($linksAdsRes[3] as $domain) {
                 $linksAdsResDomains[] = strip_tags($domain);
             }
