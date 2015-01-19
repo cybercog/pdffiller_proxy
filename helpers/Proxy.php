@@ -161,8 +161,15 @@ class Proxy
         
         $relevant = true;
         $relevantPhrase = 'In order to show you the most relevant results, we have omitted some entries';
-        if(strpos($res, $relevantPhrase) !== false){
+        $relevantNext = '<span style="display:block;margin-left:53px">Next</span></a></td></tr></table>';
+        if(strpos($res, $relevantPhrase) !== false || strpos($res, $relevantNext) === false){
             $relevant = false;
+        }
+        
+        $findResult = true;
+        $findResultPhrase = 'No results found for';
+        if(strpos($res, $findResultPhrase) !== false){
+            $findResult = false;
         }
         
         if (!$res || $res == '' || strlen($res) < 10) {
@@ -205,9 +212,11 @@ class Proxy
         //print_r($main);exit;
         preg_match_all('/<p class="_Bmc" style="margin:3px 8px"><a href="(.*)">(.*)<\/a><\/p>/Us', $res, $offenSeek);
         preg_match_all('/id="tads.*<li.*>.*<ol.*>(.*)<\/ol><\/div>/Us', $resOr, $linksAds);
-        preg_match_all('/id="tads.*<ol.*>(.*)<\/ol><\/div>/Us', $resOr, $linksAds);
-//        preg_match_all('/.*<li.*>(.*)<\/li>.*/Us', $linksAds[1][0], $linksAdsRes);
-        preg_match_all('/.*<li.*><h3><a.*href="(.*)">(.*)<\/a><\/h3>.*<cite>(.*)<\/cite>.*<span class="ac">(.*)<\/span>.*<\/li>.*/Us', $linksAds[1][0], $linksAdsRes);
+        if(!empty($linksAds)) {
+            preg_match_all('/id="tads.*<ol.*>(.*)<\/ol><\/div>/Us', $resOr, $linksAds);
+            if(isset($linksAds[1][0]))
+                preg_match_all('/.*<li.*><h3><a.*href="(.*)">(.*)<\/a><\/h3>.*<cite>(.*)<\/cite>.*<span class="ac">(.*)<\/span>.*<\/li>.*/Us', $linksAds[1][0], $linksAdsRes);
+        }
 
         $linksAdsResDomains = [];
         if(isset($linksAdsRes[3]) && !empty($linksAdsRes[3])) {
@@ -227,6 +236,7 @@ class Proxy
         $return['ads_top_domains'] = $linksAdsResDomains;
         $return['ads_top_desc'] = $linksAdsRes[4];
         $return['relevant'] = $relevant;
+        $return['findResult'] = $findResult;
 //        
 //        var_dump($return);
 //        echo $resOr;
