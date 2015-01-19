@@ -204,6 +204,17 @@ class Proxy
         //<li class="g"><span style="float:left"><span class="mime">[PDF]</span>&nbsp;</span><h3 class="r"><a href="/url?q=http://www.crestwoodmedcenter.com/Documents/The_Heart_Of_The_Matter.pdf&amp;sa=U&amp;ei=SsFKUbLhAciOtQb6tICwBA&amp;ved=0CBgQFjAA&amp;usg=AFQjCNEOBEX6AX-cVdei-nJo8fl-rkmCdw">The_Heart_Of_The_Matter - Crestwood Medical Center</a></h3><div class="s"><div class="kv" style="margin-bottom:2px"><cite>www.crestwoodmedcenter.com/Documents/The_Heart_Of_The_Matter.pdf</cite><span class="flc"> - <a href="/url?q=http://webcache.googleusercontent.com/search%3Fq%3Dcache:zS1YjSgDAuwJ:http://www.crestwoodmedcenter.com/Documents/The_Heart_Of_The_Matter.pdf%252Bfiletype:pdf%2Bsite:www.crestwoodmedcenter.com%26hl%3Den%26ct%3Dclnk&amp;sa=U&amp;ei=SsFKUbLhAciOtQb6tICwBA&amp;ved=0CBkQIDAA&amp;usg=AFQjCNHTJ1LMFBueE6pyIc2v8pDOlYvjng">Cached</a></span></div><span class="st">PREMIER PATIENT EXPERIENCE. Heart of the Matter. Hospital proves cardiac <br>  procedure is safe and is now fighting to keep the service available <b>...</b></span><br></div></li>
         //print_r($main);exit;
         preg_match_all('/<p class="_Bmc" style="margin:3px 8px"><a href="(.*)">(.*)<\/a><\/p>/Us', $res, $offenSeek);
+        preg_match_all('/id="tads.*<li.*>.*<ol.*>(.*)<\/ol><\/div>/Us', $resOr, $linksAds);
+        preg_match_all('/id="tads.*<ol.*>(.*)<\/ol><\/div>/Us', $resOr, $linksAds);
+//        preg_match_all('/.*<li.*>(.*)<\/li>.*/Us', $linksAds[1][0], $linksAdsRes);
+        preg_match_all('/.*<li.*><h3><a.*href="(.*)">(.*)<\/a><\/h3>.*<cite>(.*)<\/cite>.*<span class="ac">(.*)<\/span>.*<\/li>.*/Us', $linksAds[1][0], $linksAdsRes);
+
+        $linksAdsResDomains = [];
+        if(!empty($linksAdsRes[3])) {
+            foreach($linksAdsRes[3] as $domain) {
+                $linksAdsResDomains[] = strip_tags($domain);
+            }
+        }
         
         $return['links'] = $main[1];
         $return['titles'] = $main[2];
@@ -211,7 +222,15 @@ class Proxy
         $return['google_res_count'] = $googleResCount;
         $return['offen_seek_links'] = $offenSeek[1];
         $return['offen_seek_text'] = preg_replace('~(<b>|</b>)~','',$offenSeek[2]);
+        $return['ads_top_links'] = $linksAdsRes[1];
+        $return['ads_top_titles'] = $linksAdsRes[2];
+        $return['ads_top_domains'] = $linksAdsResDomains;
+        $return['ads_top_desc'] = $linksAdsRes[4];
         $return['relevant'] = $relevant;
+//        
+//        var_dump($return);
+//        echo $resOr;
+//        die();
 
         if (count($return['links']) == 0 && strpos($resOr, '302 Moved') !== false && strpos($resOr, 'The document has moved') !== false)
             return -2;
